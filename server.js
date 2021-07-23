@@ -1,3 +1,4 @@
+import("dotenv/config.js")
 import createError from 'http-errors'
 import express from 'express'
 import path from 'path'
@@ -5,30 +6,18 @@ import { fileURLToPath } from 'url'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 
-import { router as indexRouter } from './routes/index.js'
-import { router as usersRouter } from './routes/users.js'
+import { router as apiRouter } from './routes/api.js'
 
+import ('./config/database.js')
 const app = express()
 
-// view engine setup
-app.set(
-  'views',
-  path.join(path.dirname(fileURLToPath(import.meta.url)), 'views')
-)
-app.set('view engine', 'ejs')
 
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
-app.use(
-  express.static(
-    path.join(path.dirname(fileURLToPath(import.meta.url)), 'public')
-  )
-)
 
-app.use('/', indexRouter)
-app.use('/users', usersRouter)
+app.use('/api', apiRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
